@@ -1,0 +1,15 @@
+.List > li{
+    cursor: pointer;
+    width: 300px;
+    border-bottom: solid black 1px;
+    overflow-x: hidden;
+    font-size: 1.5em;
+}
+
+.List > li:hover {
+    background-color: rgba(0, 0, 0, 0.164);
+}
+
+.selected {
+    background-color:rgba(0, 0, 0, 0.164);
+}
