@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import './css/Form.css'
 
-class Form extends Component {
-    onSubmitCapture(e) {  
+export default class Form extends Component {
+    search(e) {  
         e.preventDefault()
         this.props.searchItem(e.target.firstChild.value)
     }
 
-    validateForm(e) {
+    validate(e) {
         if (e.target.value.match(/^[ ]+$/)) {
             e.target.value = ''
         }
@@ -18,8 +18,11 @@ class Form extends Component {
     render() {
         return (
             <div className="Form">
-                <form onSubmit={this.onSubmitCapture.bind(this)}>
-                    <input type="text" placeholder="Which country do you want to search?" ref="search" onChange={this.validateForm}/>
+                <form onSubmit={this.search.bind(this)}>
+                    <input type="text" 
+                            placeholder="Which country do you want to search?" 
+                            ref="search" 
+                            onChange={this.validate}/>
                     <input type="submit"/>
                 </form>
             </div>
@@ -30,5 +33,3 @@ class Form extends Component {
 Form.propTypes = {
     searchItem: PropTypes.func
 }
-
-export default Form

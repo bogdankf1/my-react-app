@@ -3,35 +3,27 @@ import PropTypes from 'prop-types'
 import './css/List.css'
 
 export default class List extends Component {
-    constructor() {
-        super()
-        this.state = {
-            
-        }
-    }
     addItem(item, index) {
         const listItem = <li key={index} index={index}>{item.name}</li>
-        // this.state.selected.selected ? console.log(this.state.selected.index) : ""
-        
+        item.hasOwnProperty("selected") && item.selected === true 
         return listItem
     } 
 
-    onClickCapture(e) {
-        const countryIndex = e.target.getAttribute('index')
-        const country = this.props.data[countryIndex].name
-        // this.props.data.forEach(item => item.selected = false)
-        // this.props.data[countryIndex].selected = true
-        this.setState({
-            
-        })
-        this.props.loadCities(country)
+    showSubList(e) {
+        if(this.props.hasOwnProperty("onSelect")) {
+            const countryIndex = e.target.getAttribute('index')
+            const country = this.props.data[countryIndex].name
+            this.props.data.forEach(item => item.selected = false)
+            this.props.data[countryIndex].selected = true
+            this.props.onSelect(country)
+        }
     }
 
     render() {
         const items = this.props.data.map((item, i) => this.addItem(item, i))
-        return <ul className="List" onClick={this.onClickCapture.bind(this)}>{items}</ul>
+        return <ul className="List" onClick={this.showSubList.bind(this)}>{items}</ul>
     }
-}
+};
 
 //Set default propTypes
 List.propTypes =  {
