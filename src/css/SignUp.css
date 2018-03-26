@@ -1,0 +1,14 @@
+.SignUp {
+    width: 500px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+#confirm-status {
+    color:red;
+    font-size: 0.8em;
+}
+
+.SignUp > form label {
+    color: rgba(0, 0, 0, 0.808);
+  }

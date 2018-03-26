@@ -1,10 +1,12 @@
 import {
-    LOAD_CITIES
+    RECEIVE_CITIES,
+    HIDE_CITIES
 } from './../constants/constants.js'
 
 const cityReducer = (state = {}, action) => {
     switch(action.type) {
-        case LOAD_CITIES:
+        case HIDE_CITIES:
+        case RECEIVE_CITIES:
             return Object.assign({}, state, {
                 cities:action.data
             })

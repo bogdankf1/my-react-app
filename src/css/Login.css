@@ -1,0 +1,16 @@
+.Login {
+    width: 300px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  
+  /* .Login input[type="submit"] {
+    position: absolute; 
+    left: -9999px;
+  } */
+  .Login > form > #fail-status {
+    color:red;
+  }
+  .Login > form > label {
+    color: rgba(0, 0, 0, 0.808);
+  }
