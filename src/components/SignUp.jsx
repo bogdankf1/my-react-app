@@ -53,23 +53,23 @@ class SignUp extends Component {
 					  onChange={this.validation.bind(this)}>
 					<div>
 						<label htmlFor="firstname">Firstname</label>
-						<input type="text" id="firstname" />
+						<input type="text" id="firstname" placeholder="'John'"/>
 					</div>
 					<div>
 						<label htmlFor="lastname">Lastname</label>
-						<input type="text" id="lastname"/>
+						<input type="text" id="lastname" placeholder="'Smith'"/>
 					</div>
 					<div>
 						<label htmlFor="username">Username</label>
-						<input type="text" id="username"/>
+						<input type="text" id="username" placeholder="'mr_smith'"/>
 					</div>
 					<div>
 						<label htmlFor="password">Password</label>
-						<input type="password" id="password"/>
+						<input type="password" id="password" placeholder="'pass1234word'"/>
 					</div>
 					<div>
 						<label htmlFor="confirm-password">Confirm password</label>
-						<input onBlur={this.comparePassword.bind(this)} type="password" id="confirm-password"/>
+						<input onBlur={this.comparePassword.bind(this)} type="password" id="confirm-password" placeholder="'pass1234word'"/>
 						<span id="confirm-status"></span>
 					</div>
 					<div>

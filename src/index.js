@@ -9,11 +9,14 @@ import thunk from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 import './index.css'
 import App from './App'
-import Login from './components/Login'
+import Login, {authentication} from './components/Login'
 import SignUp from './components/SignUp'
 import rootReducer from './reducers'
 import registerServiceWorker from './registerServiceWorker'
-import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
+import { BrowserRouter, Route, Switch, Link, withRouter, Redirect } from 'react-router-dom'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as actionCreators from './actions/actions'
 
 const logger = createLogger()
 const initialState = {}
@@ -38,6 +41,38 @@ const PropsRoute = ({ component, ...rest }) => {
 	)
 }
 
+const LogOut = withRouter(
+	({ history }) =>
+	authentication.isAuthenticated ? (
+		<p>
+		  Welcome!{" "}
+		  	<button className="btn" onClick={() => {
+			  	authentication.signout( 
+					  () => history.push("/")
+				) 
+			}}>
+			Sign out
+		  	</button>
+		</p>
+	) : ( <p>You are not logged in.</p> )
+)
+
+const PrivateRoute = ({ component: Component, ...rest }) => (
+	<Route
+	  {...rest}
+	  render={props =>
+		authentication.isAuthenticated ? ( <Component {...props} />) : (
+		  <Redirect
+			to={{
+			  pathname: "/login",
+			  state: { from: props.location }
+			}}
+		  />
+		)
+	}
+	/>
+)
+
 class Wrapper extends Component {
 	render() {
 		return (
@@ -45,25 +80,41 @@ class Wrapper extends Component {
 				<header className="App-header">
 					<div>
 						<Link to="/login">Log in</Link>
-						<Link to="/signup">Sign up</Link>
-						<Link id="logout" to="/login">Log out</Link>
+						<Link id="signup" to="/signup">Sign up</Link>
+						<LogOut/>
+						{/*this.props.store.getState().auth.available && <Link id="signup" to="/signup">Sign up</Link> */}
 					</div>
           			<h1 className="App-title">My application</h1>
+					
         		</header>
 				<Switch>
-					<PropsRoute exact path="/" component={App} store={store}/>
+					<PrivateRoute exact path="/" component={App} store={store}/>
 					<PropsRoute path="/signup" component={SignUp} store={store}/>
 					<PropsRoute path="/login" component={Login} store={store}/>
+					{/* <PropsRoute path="/logout" component={Logout} store={store} /> */}
 				</Switch>
 			</div>
 		)
 	}
 }
 
+//Convert app state to app props
+const mapStateToProps = state => {
+	return {
+	  availableSignUp: state.auth.available || true
+	}
+}
+const mapDispatchToProps = dispatch => {
+	return bindActionCreators({
+	  
+	}, dispatch)
+  }
+withRouter(connect(mapStateToProps, mapDispatchToProps)(Wrapper))
+
 ReactDOM.render(
 	<BrowserRouter>
 		<Provider store={store}>
-			<Wrapper />
+			<Wrapper store={store}/>
 		</Provider>
 	</BrowserRouter>, 
 	document.getElementById('root'))

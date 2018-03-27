@@ -9,7 +9,8 @@ import {
     GET_ACCESS,
     CREATE_ACCOUNT,
     AVAILABLE_SIGN_UP, 
-    UNAVAILABLE_SIGN_UP
+    UNAVAILABLE_SIGN_UP,
+    CANCEL_ACCESS
 } from './../constants/constants.js'
 
 /*
@@ -62,10 +63,16 @@ const receiveCities = (countryName, jsonData) => {
     }
 }
 
-const getAccess = (userAccess) => {
+export const getAccess = (userAccess) => {
     return {
         type:GET_ACCESS,
         access: userAccess
+    }
+}
+export const cancelAccess = () => {
+    return {
+        type:CANCEL_ACCESS,
+        access: false
     }
 }
 const createAccount = (accountStatus) => {
@@ -74,6 +81,7 @@ const createAccount = (accountStatus) => {
         status: accountStatus
     }
 }
+
 export const availableSignUp = () => {
     return {
         type: AVAILABLE_SIGN_UP,
@@ -118,7 +126,8 @@ export const sendUserData = (userData) => {
                   const status = document.createTextNode("Login or password is incorrect!")
                   document.getElementById("fail-status").appendChild(status)
                 }
-                dispatch(getAccess(jsonData.access))
+                // dispatch(getAccess(jsonData.access))
+                return jsonData
             })
     }
 }

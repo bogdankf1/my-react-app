@@ -1,10 +1,11 @@
 import {
-    GET_ACCESS, CREATE_ACCOUNT,
+    GET_ACCESS, CANCEL_ACCESS, CREATE_ACCOUNT,
     AVAILABLE_SIGN_UP, UNAVAILABLE_SIGN_UP
 } from './../constants/constants.js'
 
 const authReducer = (state = {}, action) => {
     switch(action.type) {
+        case CANCEL_ACCESS:
         case GET_ACCESS:
             return Object.assign({}, state, {
                 access:action.access

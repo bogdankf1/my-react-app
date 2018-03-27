@@ -5,16 +5,33 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as actionCreators from './../actions/actions'
 
+export const authentication = {
+	isAuthenticated: false,
+	authenticate(cb) {
+    console.log("authenticate")
+    this.isAuthenticated = true
+	},
+	signout(cb) {
+    console.log("signout")
+    this.isAuthenticated = false
+	}
+}
+
 class Login extends Component {
-  sendUserDataToServer(e) {
+  login(e) {
     e.preventDefault()
     const user = this.getUserData()
+
     for(const key in user) {
 			if(user[key] === "") { return false }
     }
-    this.props.store.currentUser = user
+    
     this.props.store.dispatch(actionCreators.sendUserData(user))
-    this.props.store.dispatch(actionCreators.unavailableSignUp())
+      .then(response => {
+        authentication.authenticate(() =>
+          this.props.store.dispatch(actionCreators.getAccess(response.access))
+        )
+      })
   }
 
   getUserData() {
@@ -32,15 +49,17 @@ class Login extends Component {
   }
 
   render() {
-    const access = this.props.store.getState().auth.access
-
-    if(access) {
-      return <Redirect to={{ pathname: "/" }} />
-    }
+    // const access = this.props.store.getState().auth.access
+    const access = this.props.access
+    console.log(this.props)
+    const { from } = this.props.location.state || { from: { pathname: "/" } }
+		if(access) {
+			return <Redirect to={from} />
+		}
     return (
       <div className="Login">
         <h3>Login</h3>
-        <form onSubmit={this.sendUserDataToServer.bind(this)}>
+        <form onSubmit={this.login.bind(this)}>
           <label htmlFor="username">Username:</label>
           <input type="text" placeholder="'John Doe'" 
                  id="username" onChange={this.validation.bind(this)}/>
@@ -60,15 +79,15 @@ class Login extends Component {
 //Convert app state to app props
 const mapStateToProps = state => {
   return {
-    access: state.auth.access || false,
-    availableSignUp: state.auth.available || false
+    access: state.auth.access || false
   }
 }
 
 //Convert app dispatched actions to app props
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    sendUserData: actionCreators.sendUserData
+    sendUserData: actionCreators.sendUserData,
+    getAccess: actionCreators.getAccess
   }, dispatch)
 }
 
