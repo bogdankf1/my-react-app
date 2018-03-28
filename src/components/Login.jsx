@@ -40,6 +40,10 @@ class Login extends Component {
           this.props.store.dispatch(actionCreators.unavailableSignUp())
           this.props.store.dispatch(actionCreators.unavailableLogin())
           this.props.store.dispatch(actionCreators.getAccess(response.access))
+        } else {
+          document.getElementById("fail-login-status").innerHTML = ""
+          const status = document.createTextNode("Login or password is incorrect!")
+          document.getElementById("fail-login-status").appendChild(status)
         }
       })
   }

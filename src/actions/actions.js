@@ -11,6 +11,7 @@ import {
     AVAILABLE_SIGN_UP, 
     UNAVAILABLE_SIGN_UP,
     CANCEL_ACCESS,
+    CANCEL_STATUS,
     AVAILABLE_LOGIN,
     UNAVAILABLE_LOGIN
 } from './../constants/constants.js'
@@ -83,6 +84,12 @@ const createAccount = (accountStatus) => {
         status: accountStatus
     }
 }
+export const cancelStatus = () => {
+    return {
+        type:CANCEL_STATUS,
+        status: false
+    }
+}
 
 export const availableSignUp = () => {
     return {
@@ -134,14 +141,6 @@ export const sendUserData = (userData) => {
                 method: "POST"
             })
             .then(response => response.json())
-            .then(jsonData => {
-                if(!jsonData.access) {
-                  document.getElementById("fail-login-status").innerHTML = ""
-                  const status = document.createTextNode("Login or password is incorrect!")
-                  document.getElementById("fail-login-status").appendChild(status)
-                }
-                return jsonData
-            })
     }
 }
 

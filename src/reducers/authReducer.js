@@ -1,6 +1,6 @@
 import {
     GET_ACCESS, CANCEL_ACCESS, CREATE_ACCOUNT,
-    AVAILABLE_SIGN_UP, UNAVAILABLE_SIGN_UP, AVAILABLE_LOGIN, UNAVAILABLE_LOGIN
+    AVAILABLE_SIGN_UP, UNAVAILABLE_SIGN_UP, AVAILABLE_LOGIN, UNAVAILABLE_LOGIN, CANCEL_STATUS
 } from './../constants/constants.js'
 
 const authReducer = (state = {}, action) => {
@@ -10,7 +10,8 @@ const authReducer = (state = {}, action) => {
             return Object.assign({}, state, {
                 access:action.access
             })
-        case CREATE_ACCOUNT: {
+        case CREATE_ACCOUNT:
+        case CANCEL_STATUS: {
             return Object.assign({}, state, {
                 status:action.status
             })

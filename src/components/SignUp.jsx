@@ -5,15 +5,21 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as actionCreators from './../actions/actions'
 
+//passwords should be same before add to users database
+//set the min and max length of passwords and usernames'
+//message if user create account with existing username
+
 class SignUp extends Component {
 	sendUserDataToServer(e) {
 		e.preventDefault()
-		if(e.target.id !== 'signup-btn') return false
+		// if(e.target.id !== 'signup-btn') return false
+
 		const userData = {}
 		userData.firstname = document.getElementById('firstname').value
 		userData.lastname = document.getElementById('lastname').value
 		userData.username = document.getElementById('username').value
 		userData.password = document.getElementById('password').value
+		// userData.confirmedPassword = document.getElementById('confirm-password').value
 
 		for(const key in userData) {
 			if(userData[key] === "") { 
@@ -23,13 +29,13 @@ class SignUp extends Component {
 				return false 
 			}
 		}
-
+		// delete userData.confirmedPassword
 		this.props.store.dispatch(actionCreators.createUserAccount(userData))
 	}
 
 	comparePassword() {
 		const password = document.getElementById('password').value,
-					confirmedPassword = document.getElementById('confirm-password').value
+			confirmedPassword = document.getElementById('confirm-password').value
 		if(password !== confirmedPassword) {
 			document.getElementById('confirm-status').innerHTML = ""
 			const status = document.createTextNode("Passwords should be same!")
@@ -60,6 +66,7 @@ class SignUp extends Component {
 	render() {
 		const status = this.props.store.getState().auth.status
 		if(status) {
+			this.props.store.dispatch(actionCreators.cancelStatus())
 			return <Redirect to={{ pathname: "/login" }} />
 		}
 		return (
@@ -111,7 +118,8 @@ const mapStateToProps = state => {
 //Convert app dispatched actions to app props
 const mapDispatchToProps = dispatch => {
 	return bindActionCreators({
-		createUserAccount: actionCreators.createUserAccount
+		createUserAccount: actionCreators.createUserAccount,
+		cancelStatus : actionCreators.cancelStatus
 	}, dispatch)
 }
 
