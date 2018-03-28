@@ -1,6 +1,3 @@
-//Disable Sign Up when user is logged in
-//Add Log Out oppoprtunity
-
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { createStore, applyMiddleware } from 'redux'
@@ -35,63 +32,69 @@ const renderMergedProps = (component, ...rest) => {
   
 const PropsRoute = ({ component, ...rest }) => {
 	return (
-		<Route {...rest} render={routeProps => {
-			return renderMergedProps(component, routeProps, rest)
+		<Route {...rest} render={props => {
+			return renderMergedProps(component, props, rest)
 		}}/>
 	)
 }
 
-const LogOut = withRouter(
-	({ history }) =>
-	authentication.isAuthenticated ? (
-		<p>
-		  Welcome!{" "}
-		  	<button className="btn" onClick={() => {
-			  	authentication.signout( 
-					  () => history.push("/")
-				) 
-			}}>
-			Sign out
-		  	</button>
-		</p>
-	) : ( <p>You are not logged in.</p> )
-)
+const PrivateRoute = ({ component: Component, ...rest }) => {
+	return (
+		<Route {...rest} render={props => {
+			return authentication.isAuthenticated ? 
+			(renderMergedProps(Component, props, rest)) : 
+			(<Redirect	to={{ pathname: "/login" }}/>)
+		}}/>
+	)
+}
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
-	<Route
-	  {...rest}
-	  render={props =>
-		authentication.isAuthenticated ? ( <Component {...props} />) : (
-		  <Redirect
-			to={{
-			  pathname: "/login",
-			  state: { from: props.location }
-			}}
-		  />
-		)
+class LogOut extends Component {
+	signout() {
+		authentication.signout()
+		this.props.store.dispatch(actionCreators.cancelAccess())
+		// this.props.store.dispatch(actionCreators.availableSignUp())
+		// this.props.store.dispatch(actionCreators.availableLogin())
 	}
-	/>
-)
+	render() {
+		if(authentication.isAuthenticated) {
+			return (
+				<div className="signout">
+					<div className="greeting">Welcome, {`${this.props.store.currentUser.username}`}!</div>
+					<div className="signout-btn-wrapper">
+						<button className="btn blue signout-button">
+							<Link onClick={this.signout.bind(this)} to="/login">Sign out</Link>
+						</button>
+					</div>	
+				</div>
+			)
+		} else {
+			return (
+				<div className="signout">You are not logged in.</div>
+			)
+		} 
+	}
+} 
+// withRouter(connect(mapStateToProps, mapDispatchToProps)(LogOut))
 
 class Wrapper extends Component {
+	// componentWillMount() {
+	// 	this.props.store.dispatch(actionCreators.availableSignUp())
+	// 	this.props.store.dispatch(actionCreators.availableLogin())
+	// }
+
 	render() {
 		return (
 			<div className="Wrapper">
 				<header className="App-header">
-					<div>
-						<Link to="/login">Log in</Link>
-						<Link id="signup" to="/signup">Sign up</Link>
-						<LogOut/>
-						{/*this.props.store.getState().auth.available && <Link id="signup" to="/signup">Sign up</Link> */}
-					</div>
-          			<h1 className="App-title">My application</h1>
-					
-        		</header>
+					{/* {this.props.store.getState().auth.availableLogin && <Link className="login-button" to="/login">Log in</Link>} */}
+					{/* {this.props.store.getState().auth.availableSignUp && <Link className="signup-button" id="signup" to="/signup">Sign up</Link>} */}
+					<LogOut store={store}/>
+					<h1 className="App-title">My application</h1>
+				</header>
 				<Switch>
 					<PrivateRoute exact path="/" component={App} store={store}/>
 					<PropsRoute path="/signup" component={SignUp} store={store}/>
 					<PropsRoute path="/login" component={Login} store={store}/>
-					{/* <PropsRoute path="/logout" component={Logout} store={store} /> */}
 				</Switch>
 			</div>
 		)
@@ -99,17 +102,21 @@ class Wrapper extends Component {
 }
 
 //Convert app state to app props
-const mapStateToProps = state => {
-	return {
-	  availableSignUp: state.auth.available || true
-	}
-}
-const mapDispatchToProps = dispatch => {
-	return bindActionCreators({
-	  
-	}, dispatch)
-  }
-withRouter(connect(mapStateToProps, mapDispatchToProps)(Wrapper))
+// const mapStateToProps = state => {
+// 	return {
+// 		availableSignUp: state.auth.availableSignUp || true,
+// 		availableLogin: state.auth.availableLogin || true
+// 	}
+// }
+// const mapDispatchToProps = dispatch => {
+// 	return bindActionCreators({
+// 		unavailableSignUp: actionCreators.unavailableSignUp,
+// 		availableSignUp: actionCreators.availableSignUp,
+// 		unavailableLogin: actionCreators.unavailableLogin,
+// 		availableLogin: actionCreators.availableLogin
+// 	}, dispatch)
+// }
+// withRouter(connect(mapStateToProps, mapDispatchToProps)(Wrapper))
 
 ReactDOM.render(
 	<BrowserRouter>

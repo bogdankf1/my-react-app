@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './../css/SignUp.css'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as actionCreators from './../actions/actions'
@@ -8,7 +8,7 @@ import * as actionCreators from './../actions/actions'
 class SignUp extends Component {
 	sendUserDataToServer(e) {
 		e.preventDefault()
-		  
+		if(e.target.id !== 'signup-btn') return false
 		const userData = {}
 		userData.firstname = document.getElementById('firstname').value
 		userData.lastname = document.getElementById('lastname').value
@@ -16,7 +16,12 @@ class SignUp extends Component {
 		userData.password = document.getElementById('password').value
 
 		for(const key in userData) {
-			if(userData[key] === "") { return false }
+			if(userData[key] === "") { 
+				document.getElementById("fail-signup-status").innerHTML = ""
+				const status = document.createTextNode("All fields are required!")
+				document.getElementById("fail-signup-status").appendChild(status)
+				return false 
+			}
 		}
 
 		this.props.store.dispatch(actionCreators.createUserAccount(userData))
@@ -41,6 +46,17 @@ class SignUp extends Component {
 		return !e.target.value ? false : true
 	}
 
+	enableSubmitBtn(e) {
+		if(document.getElementById('firstname').value &&
+		   document.getElementById('lastname').value &&
+		   document.getElementById('username').value &&
+		   document.getElementById('password').value &&
+		   document.getElementById('confirm-password').value) {
+			document.getElementById('signup-btn').classList.remove('disabled')
+		} else {
+		  	document.getElementById('signup-btn').classList.add('disabled')
+		}
+	}
 	render() {
 		const status = this.props.store.getState().auth.status
 		if(status) {
@@ -49,8 +65,8 @@ class SignUp extends Component {
 		return (
 			<div className="SignUp">
 				<h3>Sign Up</h3>
-				<form onSubmit={this.sendUserDataToServer.bind(this)}
-					  onChange={this.validation.bind(this)}>
+				<form onChange={this.validation.bind(this)}
+					  onKeyUp={this.enableSubmitBtn.bind(this)}>
 					<div>
 						<label htmlFor="firstname">Firstname</label>
 						<input type="text" id="firstname" placeholder="'John'"/>
@@ -72,8 +88,12 @@ class SignUp extends Component {
 						<input onBlur={this.comparePassword.bind(this)} type="password" id="confirm-password" placeholder="'pass1234word'"/>
 						<span id="confirm-status"></span>
 					</div>
-					<div>
-						<button type="submit" id="signup-btn" className="btn">Sign Up</button>
+					<div id="fail-signup-status"></div>
+					<div className="auth-buttons">
+						<button type="submit" id="signup-btn" className="btn disabled" onClick={this.sendUserDataToServer.bind(this)}>Sign Up</button>
+						<div className="login-button">
+							<Link to="/login"><button className="btn blue">Log in</button></Link>
+						</div>
 					</div>
 				</form>
 			</div>

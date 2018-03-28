@@ -10,7 +10,9 @@ import {
     CREATE_ACCOUNT,
     AVAILABLE_SIGN_UP, 
     UNAVAILABLE_SIGN_UP,
-    CANCEL_ACCESS
+    CANCEL_ACCESS,
+    AVAILABLE_LOGIN,
+    UNAVAILABLE_LOGIN
 } from './../constants/constants.js'
 
 /*
@@ -85,13 +87,25 @@ const createAccount = (accountStatus) => {
 export const availableSignUp = () => {
     return {
         type: AVAILABLE_SIGN_UP,
-        available: true
+        availableSignUp: true
     }
 }
 export const unavailableSignUp = () => {
     return {
         type: UNAVAILABLE_SIGN_UP,
-        available: false
+        availableSignUp: false
+    }
+}
+export const availableLogin = () => {
+    return {
+        type: AVAILABLE_LOGIN,
+        availableLogin: true
+    }
+}
+export const unavailableLogin = () => {
+    return {
+        type: UNAVAILABLE_LOGIN,
+        availableLogin: false
     }
 }
 
@@ -122,11 +136,10 @@ export const sendUserData = (userData) => {
             .then(response => response.json())
             .then(jsonData => {
                 if(!jsonData.access) {
-                  document.getElementById("fail-status").innerHTML = ""
+                  document.getElementById("fail-login-status").innerHTML = ""
                   const status = document.createTextNode("Login or password is incorrect!")
-                  document.getElementById("fail-status").appendChild(status)
+                  document.getElementById("fail-login-status").appendChild(status)
                 }
-                // dispatch(getAccess(jsonData.access))
                 return jsonData
             })
     }

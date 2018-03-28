@@ -11,4 +11,19 @@
 
 .SignUp > form label {
     color: rgba(0, 0, 0, 0.808);
-  }
+}
+
+.SignUp .auth-buttons {
+    width: 100%;
+    height: 100px;
+}
+.SignUp .login-button {
+    padding-left: 260px;
+}
+.SignUp a {
+    color:white;
+}
+.SignUp #fail-signup-status {
+    color:red;
+}
+ 
