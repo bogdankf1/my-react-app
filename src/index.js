@@ -4,7 +4,7 @@ import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import { createLogger } from 'redux-logger'
-import './index.css'
+import createSagaMiddleware from 'redux-saga'
 import App from './App'
 import Login, {authentication} from './components/Login'
 import SignUp from './components/SignUp'
@@ -12,16 +12,22 @@ import rootReducer from './reducers'
 import registerServiceWorker from './registerServiceWorker'
 import { BrowserRouter, Route, Switch, Link, Redirect } from 'react-router-dom'
 import * as actionCreators from './actions/actions'
+import rootSaga from './sagas/sagas'
 
+const sagaMiddleware = createSagaMiddleware()
 const logger = createLogger()
 const initialState = {}
+
+const action = type => store.dispatch({type})
 
 let store = createStore(
 	rootReducer, 
 	initialState,
-	applyMiddleware(thunk, logger),
+	applyMiddleware(thunk, logger, sagaMiddleware),
 	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
+
+// sagaMiddleware.run(rootSaga)
 
 const renderMergedProps = (component, ...rest) => {
 	const finalProps = Object.assign({}, ...rest)
