@@ -26,6 +26,10 @@
   grid-template-rows: auto;
 }
 
+.List-container > .List{
+  margin-top: 77px;
+}
+
 .Show-all-btn {
   font-size: 1.3em;
   text-align: center;
@@ -56,7 +60,6 @@
   display: inline-block;
   position: absolute;
   right: 0;
-  margin-right: 50px;
   font-size:1.2em;
   width: 300px;
 }
@@ -65,12 +68,15 @@
   color: white;
 }
 .signout-btn-wrapper {
+  display: inline-block;
   width: 150px;
   margin: 0 auto;
+  padding-left: 20px;
 }
 .signout > button {
   width: 100%;
 }
 .greeting {
+  display: inline-block;
   text-align: center;
 }

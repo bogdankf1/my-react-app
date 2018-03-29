@@ -8,12 +8,8 @@ import {
     HIDE_CITIES,
     GET_ACCESS,
     CREATE_ACCOUNT,
-    AVAILABLE_SIGN_UP, 
-    UNAVAILABLE_SIGN_UP,
     CANCEL_ACCESS,
-    CANCEL_STATUS,
-    AVAILABLE_LOGIN,
-    UNAVAILABLE_LOGIN
+    CANCEL_STATUS
 } from './../constants/constants.js'
 
 /*
@@ -78,41 +74,16 @@ export const cancelAccess = () => {
         access: false
     }
 }
-const createAccount = (accountStatus) => {
+const createAccount = () => {
     return {
         type:CREATE_ACCOUNT,
-        status: accountStatus
+        status: true
     }
 }
 export const cancelStatus = () => {
     return {
         type:CANCEL_STATUS,
         status: false
-    }
-}
-
-export const availableSignUp = () => {
-    return {
-        type: AVAILABLE_SIGN_UP,
-        availableSignUp: true
-    }
-}
-export const unavailableSignUp = () => {
-    return {
-        type: UNAVAILABLE_SIGN_UP,
-        availableSignUp: false
-    }
-}
-export const availableLogin = () => {
-    return {
-        type: AVAILABLE_LOGIN,
-        availableLogin: true
-    }
-}
-export const unavailableLogin = () => {
-    return {
-        type: UNAVAILABLE_LOGIN,
-        availableLogin: false
     }
 }
 
@@ -151,6 +122,15 @@ export const createUserAccount = (userData) => {
                 headers: { "Content-Type": "application/json" },
                 method: "POST"
             })
-            .then(jsonData => dispatch(createAccount(jsonData.status)))
+            .then(response => response.json())
+            .then(jsonData => {
+                console.log("status", jsonData.status)
+                if(jsonData.status) {
+                    dispatch(createAccount())
+                } else {
+                    dispatch(cancelStatus())
+                }
+                return jsonData
+            })
     }
 }

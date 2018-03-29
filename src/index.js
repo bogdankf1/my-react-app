@@ -57,16 +57,12 @@ class AuthForm extends Component {
 				<div className="signout">
 					<div className="greeting">Welcome, {`${this.props.store.currentUser.username}`}!</div>
 					<div className="signout-btn-wrapper">
-						<Link onClick={this.signout.bind(this)} to="/login">
-							<button className="btn blue signout-button">Sign out</button>
-						</Link>		
+						<Link onClick={this.signout.bind(this)} to="/login">Sign out</Link>		
 					</div>	
 				</div>
 			)
 		} else {
-			return (
-				<div className="signout">You are not logged in.</div>
-			)
+			return (<div className="signout"></div>)
 		} 
 	}
 } 

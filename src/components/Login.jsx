@@ -37,8 +37,6 @@ class Login extends Component {
         if(response.access) {
           this.props.store.currentUser = user
           authentication.authenticate()
-          this.props.store.dispatch(actionCreators.unavailableSignUp())
-          this.props.store.dispatch(actionCreators.unavailableLogin())
           this.props.store.dispatch(actionCreators.getAccess(response.access))
         } else {
           document.getElementById("fail-login-status").innerHTML = ""
@@ -84,7 +82,6 @@ class Login extends Component {
           <label htmlFor="username">Username:</label>
           <input type="text" placeholder="'John Doe'" 
                  id="username"/>
-          <span id="status"></span>
           <br/>
           <label htmlFor="password">Password:</label>
           <input type="password" placeholder="'joHndoE52617'"
@@ -93,7 +90,7 @@ class Login extends Component {
           <div className="auth-buttons">
             <button id="login-submit" type="submit" className="btn disabled" onClick={this.login.bind(this)}>Log in</button>
             <div className="signup-button">
-              <Link to="/signup"><button className="btn blue">Sign up</button></Link> 
+              <Link to="/signup">Sign up</Link> 
             </div>
           </div>
         </form>

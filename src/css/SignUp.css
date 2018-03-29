@@ -3,7 +3,9 @@
     margin: 0 auto;
     text-align: left;
 }
-
+.SignUp h3 {
+    text-align: center;
+}
 #confirm-status {
     color:red;
     font-size: 0.8em;
@@ -18,12 +20,16 @@
     height: 100px;
 }
 .SignUp .login-button {
-    padding-left: 260px;
+    padding-left: 300px;
 }
 .SignUp a {
-    color:white;
+    color:blue;
 }
 .SignUp #fail-signup-status {
     color:red;
+}
+.SignUp .signup-status {
+    color:red;
+    font-size: .8em
 }
  
