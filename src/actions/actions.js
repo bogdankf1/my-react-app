@@ -41,24 +41,12 @@ export const showAllCountries = (allCountries) => {
         data: allCountries
     }
 }
-const receiveCountries = (jsonData) => {
-    return {
-        type: RECEIVE_COUNTRIES,
-        data: jsonData
-    }
-}
+
 // Cities
 export const hideCities = () => {
     return {
         type: HIDE_CITIES,
         data: []
-    }
-}
-const receiveCities = (countryName, jsonData) => {
-    return {
-        type: RECEIVE_CITIES,
-        countryName,
-        data: jsonData
     }
 }
 
@@ -88,6 +76,12 @@ export const cancelStatus = () => {
 }
 
 //ASYNC ACTION CREATORS
+const receiveCountries = (jsonData) => {
+    return {
+        type: RECEIVE_COUNTRIES,
+        data: jsonData
+    }
+}
 export const fetchCountries = () => {
     return dispatch => {
         return fetch(`http://127.0.0.1:3001/api/country/list`)
@@ -95,7 +89,13 @@ export const fetchCountries = () => {
             .then(jsonData => dispatch(receiveCountries(jsonData)))
     }
 }
-
+const receiveCities = (countryName, jsonData) => {
+    return {
+        type: RECEIVE_CITIES,
+        countryName,
+        data: jsonData
+    }
+}
 export const fetchCities = (countryName) => {
     return dispatch => {
         return fetch(`http://127.0.0.1:3001/api/city/list/${countryName}`)
@@ -124,7 +124,6 @@ export const createUserAccount = (userData) => {
             })
             .then(response => response.json())
             .then(jsonData => {
-                console.log("status", jsonData.status)
                 if(jsonData.status) {
                     dispatch(createAccount())
                 } else {

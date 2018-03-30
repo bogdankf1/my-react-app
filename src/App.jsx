@@ -9,7 +9,20 @@ import List from './components/List'
 import SearchForm from './components/SearchForm'
 import Preloader from './components/Preloader'
 import NumberOfItems from './components/NumberOfItems'
+import { SHOW_PRELOADER,
+        HIDE_PRELOADER,
+        SHOW_ALL_COUNTRIES, 
+        SHOW_FOUND_COUNTRIES,
+        RECEIVE_COUNTRIES,
+        RECEIVE_CITIES,
+        HIDE_CITIES,
+        GET_ACCESS,
+        CREATE_ACCOUNT,
+        CANCEL_ACCESS,
+        CANCEL_STATUS
+} from './constants/constants';
 
+// import {action} from './index'
 class App extends Component {
   constructor() {
     super()
@@ -23,11 +36,14 @@ class App extends Component {
 
   //Load countries from the server
   loadCountries() {
-    this.props.store.dispatch(actionCreators.showPreloader())
-    this.props.store
-      .dispatch(actionCreators.fetchCountries())
-      .then(() => this.allCountries = this.props.store.getState().countriesData.countries)
-      .then(() => this.props.store.dispatch(actionCreators.hidePreloader()))
+    // this.props.onReceiveCountries()
+    // this.props.store.dispatch(actionCreators.showPreloader())
+    this.props.action(SHOW_PRELOADER)
+    // this.props.action(RECEIVE_COUNTRIES)
+    // this.props.store
+    //   .dispatch(actionCreators.fetchCountries())
+    //   .then(() => this.allCountries = this.props.store.getState().countriesData.countries)
+    //   .then(() => this.props.store.dispatch(actionCreators.hidePreloader()))
   }
 
   //Load cities from the server

@@ -12,6 +12,18 @@ import rootReducer from './reducers'
 import registerServiceWorker from './registerServiceWorker'
 import { BrowserRouter, Route, Switch, Link, Redirect } from 'react-router-dom'
 import * as actionCreators from './actions/actions'
+import {SHOW_PRELOADER,
+		HIDE_PRELOADER,
+		SHOW_ALL_COUNTRIES, 
+		SHOW_FOUND_COUNTRIES,
+		RECEIVE_COUNTRIES,
+		RECEIVE_CITIES,
+		HIDE_CITIES,
+		GET_ACCESS,
+		CREATE_ACCOUNT,
+		CANCEL_ACCESS,
+		CANCEL_STATUS
+} from './constants/constants'
 import rootSaga from './sagas/sagas'
 
 const sagaMiddleware = createSagaMiddleware()
@@ -24,10 +36,9 @@ let store = createStore(
 	rootReducer, 
 	initialState,
 	applyMiddleware(thunk, logger, sagaMiddleware),
-	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-)
+	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
-// sagaMiddleware.run(rootSaga)
+sagaMiddleware.run(rootSaga)
 
 const renderMergedProps = (component, ...rest) => {
 	const finalProps = Object.assign({}, ...rest)
@@ -82,7 +93,8 @@ class Wrapper extends Component {
 					<h1 className="App-title">My application</h1>
 				</header>
 				<Switch>
-					<PrivateRoute exact path="/" component={App} store={store}/>
+					<PrivateRoute exact path="/" component={App} store={store} action={action}
+						onReceiveCountries={() => action('RECEIVE_COUNTRIES')}/>
 					<PropsRoute path="/signup" component={SignUp} store={store}/>
 					<PropsRoute path="/login" component={Login} store={store}/>
 				</Switch>
