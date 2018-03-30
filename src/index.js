@@ -94,7 +94,7 @@ class Wrapper extends Component {
 				</header>
 				<Switch>
 					<PrivateRoute exact path="/" component={App} store={store} action={action}
-						onReceiveCountries={() => action('RECEIVE_COUNTRIES')}/>
+						onReceiveCountries={() => action(RECEIVE_COUNTRIES)}/>
 					<PropsRoute path="/signup" component={SignUp} store={store}/>
 					<PropsRoute path="/login" component={Login} store={store}/>
 				</Switch>

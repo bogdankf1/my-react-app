@@ -55,28 +55,44 @@ function* cancelStatus() {
 }
 function* sendUserData(userData) {
     const response = yield fetch(`http://127.0.0.1:3001/api/login`, {
-                        body: JSON.stringify(userData),
-                        headers: { "Content-Type": "application/json" },
-                        method: "POST"
-                    })
-                    .then(response => response.json())
+        body: JSON.stringify(userData),
+        headers: { "Content-Type": "application/json" },
+        method: "POST"
+    })
+    .then(response => response.json())
     //
 }
 function* createUserAccount(userData) {
-    
+    const jsonResponse = yield fetch(`http://127.0.0.1:3001/api/signup`, {
+        body: JSON.stringify(userData),
+        headers: { "Content-Type": "application/json" },
+        method: "POST"
+    })
+    .then(response => response.json())
+    .then(jsonData => {
+        if(jsonData.status) {
+           createAccount()// not sure
+        } else {
+           cancelStatus()// not sure
+        }
+        return jsonData
+    })
 }
 
 function* watchReceiveCountries() {
     // yield takeEvery(SHOW_PRELOADER, showPreloader)
-    yield takeLatest(RECEIVE_COUNTRIES, receiveCountries)
+    // yield takeLatest(RECEIVE_COUNTRIES, receiveCountries)
 }
 function* watchReceiveCities() {
-    yield takeLatest(RECEIVE_CITIES, receiveCities)
+    // yield takeLatest(RECEIVE_CITIES, receiveCities)
+}
+function* watchShowPreloader() {
+    // yield takeEvery(SHOW_PRELOADER, showPreloader)
 }
 export default function* rootSaga() {
     yield([
         watchReceiveCountries(),
-        showPreloader()
+        // watchShowPreloader()
         // watchReceiveCities()
     ])
 } 
