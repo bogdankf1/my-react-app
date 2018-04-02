@@ -10,6 +10,7 @@ const signUpHandler = async ctx => {
         const insertingComplete = await insertUserInDB(client, userData)
         ctx.body = JSON.stringify({signUpStatus:true})
     } else {
+        console.log(consist)
         ctx.body = JSON.stringify({signUpStatus:false})
     }
 }

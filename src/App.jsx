@@ -9,20 +9,14 @@ import List from './components/List'
 import SearchForm from './components/SearchForm'
 import Preloader from './components/Preloader'
 import NumberOfItems from './components/NumberOfItems'
-import { SHOW_PRELOADER,
-        HIDE_PRELOADER,
+import {
+        REQUEST_COUNTRIES, 
+        REQUEST_CITIES, 
+        SHOW_FOUND_COUNTRIES, 
         SHOW_ALL_COUNTRIES, 
-        SHOW_FOUND_COUNTRIES,
-        RECEIVE_COUNTRIES,
-        RECEIVE_CITIES,
-        HIDE_CITIES,
-        GET_ACCESS,
-        CREATE_ACCOUNT,
-        CANCEL_ACCESS,
-        CANCEL_STATUS
+        HIDE_CITIES
 } from './constants/constants';
 
-// import {action} from './index'
 class App extends Component {
   constructor() {
     super()
@@ -36,39 +30,30 @@ class App extends Component {
 
   //Load countries from the server
   loadCountries() {
-    // this.props.onReceiveCountries()
-    // this.props.store.dispatch(actionCreators.showPreloader())
-    this.props.action(SHOW_PRELOADER)
-    // this.props.action(RECEIVE_COUNTRIES)
-    // this.props.store
-    //   .dispatch(actionCreators.fetchCountries())
-    //   .then(() => this.allCountries = this.props.store.getState().countriesData.countries)
-    //   .then(() => this.props.store.dispatch(actionCreators.hidePreloader()))
+    this.props.action(REQUEST_COUNTRIES)
   }
 
   //Load cities from the server
   loadCities(countryName) {
-    this.props.store.dispatch(actionCreators.showPreloader())
-    this.props.store
-      .dispatch(actionCreators.fetchCities(countryName))
-      .then(() => this.props.store.dispatch(actionCreators.hidePreloader()))
+    this.props.store.dispatch({type:REQUEST_CITIES, countryName:countryName})
   }
 
   //Search country in the list
   searchItem(request) {
+    this.allCountries = this.props.store.getState().countriesData.countries
     const foundItems = this.props.countries.filter(item => {
       if(item.name.toLowerCase().indexOf(request) !== -1) {
         return item
       }
     })
-    this.props.store.dispatch(actionCreators.showFoundCountries(foundItems))
+    this.props.store.dispatch({type:SHOW_FOUND_COUNTRIES, data:foundItems})
     return foundItems
   }
 
   //Display full list of countries
   showAllCountries() {
-    this.props.store.dispatch(actionCreators.showAllCountries(this.allCountries))
-    this.props.store.dispatch(actionCreators.hideCities())
+    this.props.store.dispatch({type:SHOW_ALL_COUNTRIES, data:this.allCountries})
+    this.props.action(HIDE_CITIES)
   }
 
   //Render full <App />
@@ -109,11 +94,7 @@ const mapStateToProps = state => {
 
 //Convert app dispatched actions to app props
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({
-    fetchCountries: actionCreators.fetchCountries,
-    fetchCities: actionCreators.fetchCities,
-    hideCities: actionCreators.hideCities
-  }, dispatch)
+  return bindActionCreators({}, dispatch)
 }
 
 //Connect app and map state and dispatch to props

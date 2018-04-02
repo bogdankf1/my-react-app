@@ -4,19 +4,16 @@ import { Redirect, Link } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as actionCreators from './../actions/actions'
+import { GET_ACCESS, REQUEST_SEND_USER_DATA } from './../constants/constants'
 
 export const authentication = {
 	isAuthenticated: false,
-	authenticate() {
-    this.isAuthenticated = true
-	},
-	signout() {
-    this.isAuthenticated = false
-	}
+	authenticate() {this.isAuthenticated = true},
+	signout() {this.isAuthenticated = false}
 }
 
 class Login extends Component {
-  login(e) {
+  async login(e) {
     e.preventDefault()
     if(e.target.id !== 'login-submit') {
       return false
@@ -32,18 +29,33 @@ class Login extends Component {
       }
     }
     
-    this.props.store.dispatch(actionCreators.sendUserData(user))
+      this.props.store.dispatch(actionCreators.sendUserData(user))
       .then(response => {
         if(response.access) {
           this.props.store.currentUser = user
           authentication.authenticate()
-          this.props.store.dispatch(actionCreators.getAccess(response.access))
+          this.props.store.dispatch({type:GET_ACCESS, access:response.access})
         } else {
           document.getElementById("fail-login-status").innerHTML = ""
           const status = document.createTextNode("Login or password is incorrect!")
           document.getElementById("fail-login-status").appendChild(status)
         }
       })
+    // await this.props.store.dispatch({type:REQUEST_SEND_USER_DATA, payload:user})
+    // await this.getUserAccess(user)
+  }
+
+  async getUserAccess(user) {
+    const access = await this.props.store.getState().auth.response.access
+    if(access) {
+      this.props.store.currentUser = user
+      authentication.authenticate()
+      this.props.store.dispatch({type:GET_ACCESS, access:access})
+    } else {
+      document.getElementById("fail-login-status").innerHTML = ""
+      const status = document.createTextNode("Login or password is incorrect!")
+      document.getElementById("fail-login-status").appendChild(status)
+    }
   }
 
   getUserData() {
@@ -109,9 +121,7 @@ const mapStateToProps = state => {
 //Convert app dispatched actions to app props
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({
-    sendUserData: actionCreators.sendUserData,
-    getAccess: actionCreators.getAccess,
-    cancelAccess: actionCreators.cancelAccess
+    sendUserData: actionCreators.sendUserData
   }, dispatch)
 }
 

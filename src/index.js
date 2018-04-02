@@ -12,19 +12,8 @@ import rootReducer from './reducers'
 import registerServiceWorker from './registerServiceWorker'
 import { BrowserRouter, Route, Switch, Link, Redirect } from 'react-router-dom'
 import * as actionCreators from './actions/actions'
-import {SHOW_PRELOADER,
-		HIDE_PRELOADER,
-		SHOW_ALL_COUNTRIES, 
-		SHOW_FOUND_COUNTRIES,
-		RECEIVE_COUNTRIES,
-		RECEIVE_CITIES,
-		HIDE_CITIES,
-		GET_ACCESS,
-		CREATE_ACCOUNT,
-		CANCEL_ACCESS,
-		CANCEL_STATUS
-} from './constants/constants'
 import rootSaga from './sagas/sagas'
+import { CANCEL_ACCESS } from './constants/constants';
 
 const sagaMiddleware = createSagaMiddleware()
 const logger = createLogger()
@@ -66,7 +55,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 class AuthForm extends Component {
 	signout() {
 		authentication.signout()
-		this.props.store.dispatch(actionCreators.cancelAccess())
+		action(CANCEL_ACCESS)
 	}
 	render() {
 		if(authentication.isAuthenticated) {
@@ -93,10 +82,9 @@ class Wrapper extends Component {
 					<h1 className="App-title">My application</h1>
 				</header>
 				<Switch>
-					<PrivateRoute exact path="/" component={App} store={store} action={action}
-						onReceiveCountries={() => action(RECEIVE_COUNTRIES)}/>
-					<PropsRoute path="/signup" component={SignUp} store={store}/>
-					<PropsRoute path="/login" component={Login} store={store}/>
+					<PrivateRoute exact path="/" component={App} store={store} action={action}/>
+					<PropsRoute path="/signup" component={SignUp} store={store} action={action}/>
+					<PropsRoute path="/login" component={Login} store={store} action={action}/>
 				</Switch>
 			</div>
 		)

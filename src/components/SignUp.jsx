@@ -4,6 +4,7 @@ import { Redirect, Link } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as actionCreators from './../actions/actions'
+import { CANCEL_STATUS, REQUEST_CREATE_USER_ACCOUNT } from '../constants/constants';
 
 class SignUp extends Component {
 	constructor() {
@@ -14,14 +15,15 @@ class SignUp extends Component {
 	sendUserDataToServer(e) {
 		e.preventDefault()
 		const userData = this.getUserData()
-		this.props.store.dispatch(actionCreators.createUserAccount(userData))
-		 .then((response) => {
-			if(!response.status) {
-				document.getElementById('username-status').innerHTML = ""
-				const error = document.createTextNode(`Account with such email is already exist!`)
-				document.getElementById('username-status').appendChild(error)
-			}
-		 })
+		this.props.store.dispatch({type:REQUEST_CREATE_USER_ACCOUNT, payload:userData})
+		// this.props.store.dispatch(actionCreators.createUserAccount(userData))
+		// 	.then( response => {
+		// 		if(!response.signUpStatus) {
+		// 			document.getElementById('username-status').innerHTML = ""
+		// 			const error = document.createTextNode(`Account with such email is already exist!`)
+		// 			document.getElementById('username-status').appendChild(error)
+		// 		}
+		// 	})
 	}
 
 	getUserData() {
@@ -83,7 +85,7 @@ class SignUp extends Component {
 	render() {
 		const status = this.props.store.getState().auth.status
 		if(status) {
-			this.props.store.dispatch(actionCreators.cancelStatus())
+			this.props.store.dispatch({type:CANCEL_STATUS, status:false})
 			return <Redirect to={{ pathname: "/login" }} />
 		}
 		return (
@@ -142,8 +144,7 @@ const mapStateToProps = state => {
 //Convert app dispatched actions to app props
 const mapDispatchToProps = dispatch => {
 	return bindActionCreators({
-		createUserAccount: actionCreators.createUserAccount,
-		cancelStatus : actionCreators.cancelStatus
+		createUserAccount: actionCreators.createUserAccount
 	}, dispatch)
 }
 
