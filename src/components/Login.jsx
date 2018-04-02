@@ -13,7 +13,7 @@ export const authentication = {
 }
 
 class Login extends Component {
-  async login(e) {
+  login(e) {
     e.preventDefault()
     if(e.target.id !== 'login-submit') {
       return false
@@ -28,25 +28,13 @@ class Login extends Component {
         return false 
       }
     }
-    
-      this.props.store.dispatch(actionCreators.sendUserData(user))
-      .then(response => {
-        if(response.access) {
-          this.props.store.currentUser = user
-          authentication.authenticate()
-          this.props.store.dispatch({type:GET_ACCESS, access:response.access})
-        } else {
-          document.getElementById("fail-login-status").innerHTML = ""
-          const status = document.createTextNode("Login or password is incorrect!")
-          document.getElementById("fail-login-status").appendChild(status)
-        }
-      })
-    // await this.props.store.dispatch({type:REQUEST_SEND_USER_DATA, payload:user})
-    // await this.getUserAccess(user)
+
+    this.props.store.dispatch({type:REQUEST_SEND_USER_DATA, payload:user})
+    this.getUserAccess(user)
   }
 
-  async getUserAccess(user) {
-    const access = await this.props.store.getState().auth.response.access
+  getUserAccess(user) {
+    const access = this.props.store.getState().auth.response.access
     if(access) {
       this.props.store.currentUser = user
       authentication.authenticate()

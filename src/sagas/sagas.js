@@ -19,7 +19,7 @@ import {
 
 function* sendUserData(action) {
     const jsonResponse = yield fetch(`http://127.0.0.1:3001/api/login`, {
-        body: JSON.stringify(action.userData),
+        body: JSON.stringify(action.payload),
         headers: { "Content-Type": "application/json" },
         method: "POST"
     })
@@ -34,7 +34,6 @@ function* createUserAccount(action) {
         method: "POST"
     })
     .then(response => response.json())
-    console.log(jsonResponse)
     if(jsonResponse) {
         yield put({type:CREATE_ACCOUNT, status:true})
     } else {
@@ -43,17 +42,6 @@ function* createUserAccount(action) {
         const error = document.createTextNode(`Account with such email is already exist!`)
         document.getElementById('username-status').appendChild(error)
     }
-    // .then(jsonData => {
-    //     if(jsonData.signUpStatus) {
-    //         put({type:CREATE_ACCOUNT, status:true})
-    //     } else {
-    //         put({type:CANCEL_STATUS, status:false})
-    //         document.getElementById('username-status').innerHTML = ""
-    //         const error = document.createTextNode(`Account with such email is already exist!`)
-    //         document.getElementById('username-status').appendChild(error)
-    //     }
-    //     return jsonData
-    // })
     yield put({type:SUCCESS_CREATE_USER_ACCOUNT, response:jsonResponse})
 }
 
