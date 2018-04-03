@@ -61,7 +61,7 @@ class AuthForm extends Component {
 		if(authentication.isAuthenticated) {
 			return (
 				<div className="signout">
-					<div className="greeting">Welcome, {`${this.props.store.currentUser.username}`}!</div>
+					<div className="greeting">Welcome, {`${this.props.store.getState().auth.user.username}`}!</div>
 					<div className="signout-btn-wrapper">
 						<Link onClick={this.signout.bind(this)} to="/login">Sign out</Link>		
 					</div>	

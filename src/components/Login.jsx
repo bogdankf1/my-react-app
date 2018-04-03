@@ -15,9 +15,6 @@ export const authentication = {
 class Login extends Component {
   login(e) {
     e.preventDefault()
-    if(e.target.id !== 'login-submit') {
-      return false
-    }
     const user = this.getUserData()
 
     for(const key in user) {
@@ -28,22 +25,7 @@ class Login extends Component {
         return false 
       }
     }
-
     this.props.store.dispatch({type:REQUEST_SEND_USER_DATA, payload:user})
-    this.getUserAccess(user)
-  }
-
-  getUserAccess(user) {
-    const access = this.props.store.getState().auth.response.access
-    if(access) {
-      this.props.store.currentUser = user
-      authentication.authenticate()
-      this.props.store.dispatch({type:GET_ACCESS, access:access})
-    } else {
-      document.getElementById("fail-login-status").innerHTML = ""
-      const status = document.createTextNode("Login or password is incorrect!")
-      document.getElementById("fail-login-status").appendChild(status)
-    }
   }
 
   getUserData() {
@@ -72,8 +54,8 @@ class Login extends Component {
   render() {
     const access = this.props.store.getState().auth.access
 		if(access) {
-			return <Redirect to={{ pathname: "/" } } />
-		}
+      return <Redirect to={{ pathname: "/" } } />
+    }
     return (
       <div className="Login">
         <h3>Login</h3>

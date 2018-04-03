@@ -1,5 +1,13 @@
 import {
-    GET_ACCESS, CANCEL_ACCESS, CREATE_ACCOUNT, CANCEL_STATUS, REQUEST_SEND_USER_DATA, REQUEST_CREATE_USER_ACCOUNT, SUCCESS_SEND_USER_DATA, SUCCESS_CREATE_USER_ACCOUNT
+    GET_ACCESS, 
+    CANCEL_ACCESS,
+    CREATE_ACCOUNT, 
+    CANCEL_STATUS, 
+    REQUEST_SEND_USER_DATA, 
+    REQUEST_CREATE_USER_ACCOUNT, 
+    SUCCESS_SEND_USER_DATA, 
+    SUCCESS_CREATE_USER_ACCOUNT, 
+    SET_CURRENT_USER
 } from './../constants/constants.js'
 
 const authReducer = (state = {}, action) => {
@@ -23,6 +31,10 @@ const authReducer = (state = {}, action) => {
         case SUCCESS_CREATE_USER_ACCOUNT: 
             return Object.assign({}, state, {
                 response:action.response
+            })
+        case SET_CURRENT_USER:
+            return Object.assign({}, state, {
+                user:action.user
             })
         default:
             return state

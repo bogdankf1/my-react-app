@@ -14,9 +14,10 @@ import {
     REQUEST_SEND_USER_DATA,
     SUCCESS_SEND_USER_DATA,
     SUCCESS_CREATE_USER_ACCOUNT,
-    REQUEST_CREATE_USER_ACCOUNT
+    REQUEST_CREATE_USER_ACCOUNT,
+    SET_CURRENT_USER
 } from './../constants/constants.js'
-
+import {authentication} from './../components/Login'
 function* sendUserData(action) {
     const jsonResponse = yield fetch(`http://127.0.0.1:3001/api/login`, {
         body: JSON.stringify(action.payload),
@@ -24,6 +25,17 @@ function* sendUserData(action) {
         method: "POST"
     })
     .then(response => response.json())
+    if(jsonResponse.access) {
+        console.log(jsonResponse)
+        // this.props.store.currentUser = user
+        authentication.authenticate()
+        yield put({type:SET_CURRENT_USER, user:action.payload})
+        yield put({type:GET_ACCESS, access:jsonResponse})
+      } else {
+        document.getElementById("fail-login-status").innerHTML = ""
+        const status = document.createTextNode("Login or password is incorrect!")
+        document.getElementById("fail-login-status").appendChild(status)
+      }
     yield put({type:SUCCESS_SEND_USER_DATA, response:jsonResponse})
 }
 
