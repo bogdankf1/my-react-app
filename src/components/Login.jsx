@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import './../css/Login.css'
 import { Redirect, Link } from 'react-router-dom'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as actionCreators from './../actions/actions'
-import { GET_ACCESS, REQUEST_SEND_USER_DATA } from './../constants/constants'
+import { REQUEST_SEND_USER_DATA, 
+         ALL_FIELDS_ARE_REQUIRED, 
+         ALL_FIELDS_ARE_FILLED, 
+         LOGIN_AND_PASSWORD_ARE_CORRECT} from './../constants/constants'
 
 export const authentication = {
 	isAuthenticated: false,
@@ -13,25 +14,28 @@ export const authentication = {
 }
 
 class Login extends Component {
+  componentDidMount() {
+    this.props.store.dispatch({type:LOGIN_AND_PASSWORD_ARE_CORRECT})
+  }
+
   login(e) {
     e.preventDefault()
     const user = this.getUserData()
 
     for(const key in user) {
 			if(user[key] === "") { 
-        document.getElementById("fail-login-status").innerHTML = ""
-				const status = document.createTextNode("All fields are required!")
-				document.getElementById("fail-login-status").appendChild(status)
+        this.props.store.dispatch({type:ALL_FIELDS_ARE_REQUIRED})        
         return false 
       }
     }
+    this.props.store.dispatch({type:ALL_FIELDS_ARE_FILLED})
     this.props.store.dispatch({type:REQUEST_SEND_USER_DATA, payload:user})
   }
 
   getUserData() {
     const userData = {}
-    userData.username = document.getElementById('username').value
-    userData.password = document.getElementById('password').value
+    userData.username = this.username.value
+    userData.password = this.password.value
     return userData
   }
 
@@ -43,11 +47,11 @@ class Login extends Component {
   }
 
   enableSubmitBtn(e) {
-    if(document.getElementById('username').value &&
-       document.getElementById('password').value) {
-        document.getElementById('login-submit').classList.remove('disabled')
+    if(this.username.value &&
+       this.password.value) {
+        this.loginSubmit.classList.remove('disabled')
     } else {
-      document.getElementById('login-submit').classList.add('disabled')
+      this.loginSubmit.classList.add('disabled')
     }
   }
 
@@ -62,15 +66,16 @@ class Login extends Component {
         <form onChange={this.validation.bind(this)} 
               onKeyUp={this.enableSubmitBtn.bind(this)}>
           <label htmlFor="username">Username:</label>
-          <input type="text" placeholder="'John Doe'" 
+          <input ref={el => this.username = el} type="text" placeholder="'John Doe'" 
                  id="username"/>
           <br/>
           <label htmlFor="password">Password:</label>
-          <input type="password" placeholder="'joHndoE52617'"
+          <input ref={el => this.password = el} type="password" placeholder="'joHndoE52617'"
                   id="password"/>
-          <div id="fail-login-status"></div>
+          <div id="fail-login-status">{this.props.fieldsWarning}{this.props.loginWarning}</div>
           <div className="auth-buttons">
-            <button id="login-submit" type="submit" className="btn disabled" onClick={this.login.bind(this)}>Log in</button>
+            <button ref={el => this.loginSubmit = el} id="login-submit" type="submit" className="btn disabled" 
+                    onClick={this.login.bind(this)}>Log in</button>
             <div className="signup-button">
               <Link to="/signup">Sign up</Link> 
             </div>
@@ -84,15 +89,10 @@ class Login extends Component {
 //Convert app state to app props
 const mapStateToProps = state => {
   return {
-    access: state.auth.access || false
+    access: state.auth.access || false,
+    loginWarning:state.errors.loginWarning || "",
+    fieldsWarning: state.errors.fieldsWarning || ""
   }
 }
 
-//Convert app dispatched actions to app props
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({
-    sendUserData: actionCreators.sendUserData
-  }, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(mapStateToProps)(Login)

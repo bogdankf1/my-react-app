@@ -5,8 +5,6 @@ import {
     CANCEL_STATUS, 
     REQUEST_SEND_USER_DATA, 
     REQUEST_CREATE_USER_ACCOUNT, 
-    SUCCESS_SEND_USER_DATA, 
-    SUCCESS_CREATE_USER_ACCOUNT, 
     SET_CURRENT_USER
 } from './../constants/constants.js'
 
@@ -26,11 +24,6 @@ const authReducer = (state = {}, action) => {
         case REQUEST_CREATE_USER_ACCOUNT:
             return Object.assign({}, state, {
                 payload:action.payload
-            })
-        case SUCCESS_SEND_USER_DATA:
-        case SUCCESS_CREATE_USER_ACCOUNT: 
-            return Object.assign({}, state, {
-                response:action.response
             })
         case SET_CURRENT_USER:
             return Object.assign({}, state, {

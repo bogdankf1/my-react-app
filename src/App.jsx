@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as actionCreators from './actions/actions'
 import { withRouter } from 'react-router-dom'
 import './css/App.css'
 import List from './components/List'
@@ -88,14 +86,9 @@ const mapStateToProps = state => {
   return {
     countries: state.countriesData.countries || [],
     cities: state.citiesData.cities || [],
-    showPreloader: state.preloader.showPreloader || false
+    showPreloader: state.preloader.visibility || false
   }
 }
 
-//Convert app dispatched actions to app props
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({}, dispatch)
-}
-
 //Connect app and map state and dispatch to props
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
+export default withRouter(connect(mapStateToProps)(App))

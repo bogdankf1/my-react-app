@@ -6,9 +6,12 @@ import {
 const preloaderReducer = (state = {}, action) => {
     switch(action.type) {
         case SHOW_PRELOADER:
+            return Object.assign({}, state, {
+                visibility:true
+            })
         case HIDE_PRELOADER:
             return Object.assign({}, state, {
-                showPreloader:action.visibility
+                visibility:false
             })
         default:
             return state
